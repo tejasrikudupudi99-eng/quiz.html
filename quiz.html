@@ -1,0 +1,1530 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Python Quiz Application</title>
+
+    <!-- Bootstrap CSS -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <style>
+        body {
+            background: #f4f7fb;
+            min-height: 100vh;
+        }
+
+        .navbar-brand {
+            font-weight: bold;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .active-page {
+            display: block;
+        }
+
+        .login-card {
+            max-width: 500px;
+            margin: 80px auto;
+        }
+
+        .quiz-card {
+            border: none;
+            border-radius: 15px;
+        }
+
+        .option-btn {
+            width: 100%;
+            text-align: left;
+            margin-bottom: 12px;
+            padding: 14px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            background: white;
+        }
+
+        .option-btn:hover {
+            background: #f0f4ff;
+        }
+
+        .correct {
+            background: #d1e7dd !important;
+            border-color: #198754 !important;
+        }
+
+        .wrong {
+            background: #f8d7da !important;
+            border-color: #dc3545 !important;
+        }
+
+        .question-number {
+            width: 42px;
+            height: 42px;
+            margin: 4px;
+            border-radius: 50%;
+        }
+
+        .answered {
+            background: #198754 !important;
+            color: white !important;
+        }
+
+        .current {
+            border: 3px solid #0d6efd !important;
+        }
+
+        .result-card {
+            border-radius: 15px;
+            border: none;
+        }
+
+        .score-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #e7f1ff;
+            font-size: 35px;
+            font-weight: bold;
+            color: #0d6efd;
+        }
+
+        .review-item {
+            border-left: 5px solid #dc3545;
+            background: white;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+        }
+
+        @media (max-width: 576px) {
+            .login-card {
+                margin: 30px auto;
+            }
+
+            .question-number {
+                width: 38px;
+                height: 38px;
+                padding: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-dark bg-primary">
+    <div class="container">
+        <span class="navbar-brand">🐍 Python Quiz Application</span>
+    </div>
+</nav>
+
+
+<!-- ================= LOGIN PAGE ================= -->
+
+<div id="loginPage" class="page active-page">
+
+    <div class="container">
+
+        <div class="card login-card shadow">
+
+            <div class="card-body p-4">
+
+                <h2 class="text-center mb-4">
+                    📝 Python Online Exam
+                </h2>
+
+                <div class="mb-3">
+                    <label class="form-label">Student Name / Login ID</label>
+                    <input
+                        type="text"
+                        id="studentName"
+                        class="form-control"
+                        placeholder="Enter your name"
+                    >
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Select Question Paper</label>
+
+                    <select id="paperSelect" class="form-select">
+                        <option value="easy">Python Basics</option>
+                        <option value="medium">Python Medium Level</option>
+                        <option value="hard">Python High Level</option>
+                    </select>
+                </div>
+
+                <button
+                    class="btn btn-primary w-100 mb-2"
+                    onclick="startStudentExam()">
+                    👨‍🎓 Student Login
+                </button>
+
+                <button
+                    class="btn btn-dark w-100"
+                    onclick="showAdmin()">
+                    👨‍💼 Admin Login
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ================= ADMIN PAGE ================= -->
+
+<div id="adminPage" class="page">
+
+    <div class="container py-4">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>👨‍💼 Admin Panel</h2>
+
+            <button
+                class="btn btn-outline-danger"
+                onclick="goHome()">
+                Logout
+            </button>
+        </div>
+
+        <div class="card shadow">
+
+            <div class="card-body">
+
+                <h4 class="mb-3">➕ Add Question</h4>
+
+                <div class="mb-3">
+                    <label class="form-label">Question Paper</label>
+
+                    <select id="adminPaper" class="form-select">
+                        <option value="easy">Python Basics</option>
+                        <option value="medium">Python Medium Level</option>
+                        <option value="hard">Python High Level</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Question</label>
+
+                    <textarea
+                        id="newQuestion"
+                        class="form-control"
+                        placeholder="Enter question">
+                    </textarea>
+                </div>
+
+                <div class="row">
+
+                    <div class="col-md-6 mb-3">
+                        <input
+                            id="option1"
+                            class="form-control"
+                            placeholder="Option 1">
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <input
+                            id="option2"
+                            class="form-control"
+                            placeholder="Option 2">
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <input
+                            id="option3"
+                            class="form-control"
+                            placeholder="Option 3">
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <input
+                            id="option4"
+                            class="form-control"
+                            placeholder="Option 4">
+                    </div>
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Correct Option
+                    </label>
+
+                    <select id="correctOption" class="form-select">
+
+                        <option value="0">Option 1</option>
+                        <option value="1">Option 2</option>
+                        <option value="2">Option 3</option>
+                        <option value="3">Option 4</option>
+
+                    </select>
+
+                </div>
+
+                <button
+                    class="btn btn-success"
+                    onclick="addQuestion()">
+                    ➕ Add Question
+                </button>
+
+                <button
+                    class="btn btn-secondary"
+                    onclick="goHome()">
+                    Back
+                </button>
+
+                <div id="adminMessage" class="mt-3"></div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ================= QUIZ PAGE ================= -->
+
+<div id="quizPage" class="page">
+
+    <div class="container-fluid py-3">
+
+        <div class="row">
+
+            <!-- QUESTION NUMBERS -->
+
+            <div class="col-lg-3 mb-3">
+
+                <div class="card shadow">
+
+                    <div class="card-body">
+
+                        <h5>
+                            Questions
+                        </h5>
+
+                        <p class="text-muted">
+                            Click any number to open that question.
+                        </p>
+
+                        <div
+                            id="questionNumbers"
+                            class="d-flex flex-wrap">
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- QUESTION AREA -->
+
+            <div class="col-lg-9">
+
+                <div class="card quiz-card shadow">
+
+                    <div class="card-body p-4">
+
+                        <div class="d-flex justify-content-between mb-3">
+
+                            <span id="studentDisplay"
+                                  class="badge bg-primary">
+                            </span>
+
+                            <span id="questionCount"
+                                  class="badge bg-secondary">
+                            </span>
+
+                        </div>
+
+                        <h4 id="questionText">
+                        </h4>
+
+                        <hr>
+
+                        <div id="optionsContainer">
+                        </div>
+
+                        <div
+                            id="answerFeedback"
+                            class="mt-3">
+                        </div>
+
+                        <div class="d-flex justify-content-between mt-4">
+
+                            <button
+                                class="btn btn-secondary"
+                                onclick="previousQuestion()">
+                                ← Previous
+                            </button>
+
+                            <button
+                                id="nextButton"
+                                class="btn btn-primary"
+                                onclick="nextQuestion()">
+                                Next →
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ================= RESULT PAGE ================= -->
+
+<div id="resultPage" class="page">
+
+    <div class="container py-5">
+
+        <div class="card result-card shadow">
+
+            <div class="card-body text-center p-4">
+
+                <h2>
+                    🎉 Exam Completed
+                </h2>
+
+                <p id="resultStudent"></p>
+
+                <div class="score-circle my-4">
+
+                    <span id="finalScore">
+                    </span>
+
+                </div>
+
+                <h3 id="scoreMessage">
+                </h3>
+
+                <p id="scoreDetails">
+                </p>
+
+                <button
+                    class="btn btn-primary"
+                    onclick="showReview()">
+                    🔍 Review Exam
+                </button>
+
+                <button
+                    class="btn btn-secondary"
+                    onclick="goHome()">
+                    🏠 Home
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ================= REVIEW PAGE ================= -->
+
+<div id="reviewPage" class="page">
+
+    <div class="container py-4">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+
+            <h2>
+                📖 Exam Review
+            </h2>
+
+            <button
+                class="btn btn-primary"
+                onclick="goHome()">
+                🏠 Home
+            </button>
+
+        </div>
+
+        <div id="reviewContainer">
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* =====================================================
+   QUESTION PAPERS
+===================================================== */
+
+const quizData = {
+
+easy: [
+
+{
+question: "Which keyword is used to define a function in Python?",
+options: ["function", "def", "fun", "define"],
+answer: 1
+},
+
+{
+question: "Which symbol is used for comments in Python?",
+options: ["//", "#", "/*", "--"],
+answer: 1
+},
+
+{
+question: "Which of the following is a Python list?",
+options: ["{1,2,3}", "[1,2,3]", "(1,2,3)", "<1,2,3>"],
+answer: 1
+},
+
+{
+question: "Which function is used to display output?",
+options: ["display()", "show()", "print()", "output()"],
+answer: 2
+},
+
+{
+question: "Which data type stores True or False?",
+options: ["int", "str", "bool", "float"],
+answer: 2
+},
+
+{
+question: "What is the extension of Python files?",
+options: [".java", ".py", ".python", ".pt"],
+answer: 1
+},
+
+{
+question: "Which operator is used for exponentiation?",
+options: ["^", "**", "//", "%%"],
+answer: 1
+},
+
+{
+question: "Which function returns the length of a list?",
+options: ["size()", "length()", "len()", "count()"],
+answer: 2
+},
+
+{
+question: "Which collection is ordered and changeable?",
+options: ["Tuple", "List", "Set", "FrozenSet"],
+answer: 1
+},
+
+{
+question: "Which keyword is used for a loop?",
+options: ["repeat", "loop", "for", "iterate"],
+answer: 2
+},
+
+{
+question: "Which keyword is used for conditional statements?",
+options: ["if", "when", "check", "condition"],
+answer: 0
+},
+
+{
+question: "Which method adds an item to the end of a list?",
+options: ["add()", "append()", "insertEnd()", "push()"],
+answer: 1
+},
+
+{
+question: "Which data type stores text?",
+options: ["int", "float", "str", "bool"],
+answer: 2
+},
+
+{
+question: "What does 10 // 3 return?",
+options: ["3", "3.33", "1", "4"],
+answer: 0
+},
+
+{
+question: "Which keyword exits a loop?",
+options: ["stop", "exit", "break", "end"],
+answer: 2
+},
+
+{
+question: "Which keyword skips the current loop iteration?",
+options: ["skip", "continue", "pass", "next"],
+answer: 1
+},
+
+{
+question: "Which function converts a value to integer?",
+options: ["integer()", "int()", "number()", "convert()"],
+answer: 1
+},
+
+{
+question: "Which brackets are used to create a tuple?",
+options: ["[]", "{}", "() ", "<>"],
+answer: 2
+},
+
+{
+question: "Which function gets input from the user?",
+options: ["get()", "read()", "input()", "scan()"],
+answer: 2
+},
+
+{
+question: "Which keyword is used to create a class?",
+options: ["object", "class", "struct", "create"],
+answer: 1
+}
+
+],
+
+medium: [
+
+{
+question: "What is the output of print(2 ** 3)?",
+options: ["5", "6", "8", "9"],
+answer: 2
+},
+
+{
+question: "Which data structure stores unique values?",
+options: ["List", "Tuple", "Set", "Dictionary"],
+answer: 2
+},
+
+{
+question: "What does enumerate() provide?",
+options: ["Only values", "Index and value", "Only index", "Keys only"],
+answer: 1
+},
+
+{
+question: "Which keyword creates an anonymous function?",
+options: ["anonymous", "lambda", "function", "def"],
+answer: 1
+},
+
+{
+question: "What does dictionary.get(key) return if key is absent by default?",
+options: ["Error", "None", "False", "0"],
+answer: 1
+},
+
+{
+question: "Which method removes and returns the last list item?",
+options: ["remove()", "delete()", "pop()", "discard()"],
+answer: 2
+},
+
+{
+question: "What is list comprehension?",
+options: [
+"Loop inside a list",
+"Compact way to create lists",
+"Sorting a list",
+"Deleting a list"
+],
+answer: 1
+},
+
+{
+question: "Which module provides mathematical functions?",
+options: ["math", "calc", "number", "mathematics"],
+answer: 0
+},
+
+{
+question: "What does isinstance() check?",
+options: [
+"Variable value",
+"Object type",
+"Memory address",
+"File size"
+],
+answer: 1
+},
+
+{
+question: "Which exception occurs when dividing by zero?",
+options: [
+"ValueError",
+"TypeError",
+"ZeroDivisionError",
+"NameError"
+],
+answer: 2
+},
+
+{
+question: "Which keyword handles exceptions?",
+options: ["try", "catch", "error", "handle"],
+answer: 0
+},
+
+{
+question: "Which block always executes in exception handling?",
+options: ["try", "except", "finally", "error"],
+answer: 2
+},
+
+{
+question: "What does *args represent?",
+options: [
+"Keyword arguments",
+"Variable positional arguments",
+"Pointer",
+"List"
+],
+answer: 1
+},
+
+{
+question: "What does **kwargs represent?",
+options: [
+"Variable keyword arguments",
+"Variable integers",
+"Dictionary only",
+"Pointer"
+],
+answer: 0
+},
+
+{
+question: "Which function sorts a list and returns a new list?",
+options: [
+"sort()",
+"sorted()",
+"order()",
+"arrange()"
+],
+answer: 1
+},
+
+{
+question: "Which keyword imports a module?",
+options: ["include", "import", "using", "require"],
+answer: 1
+},
+
+{
+question: "Which method converts dictionary keys into a view?",
+options: ["key()", "keys()", "getkeys()", "dictionaryKeys()"],
+answer: 1
+},
+
+{
+question: "Which statement creates a generator?",
+options: [
+"return",
+"yield",
+"generate",
+"produce"
+],
+answer: 1
+},
+
+{
+question: "What is inheritance?",
+options: [
+"Deleting a class",
+"Creating a class from another class",
+"Creating a variable",
+"Importing a module"
+],
+answer: 1
+},
+
+{
+question: "Which special method initializes an object?",
+options: ["__start__", "__init__", "__create__", "__newobject__"],
+answer: 1
+}
+
+],
+
+hard: [
+
+{
+question: "Which concept allows the same interface to have different implementations?",
+options: ["Encapsulation", "Polymorphism", "Inheritance", "Compilation"],
+answer: 1
+},
+
+{
+question: "What is the average lookup complexity of a Python dictionary?",
+options: ["O(n)", "O(log n)", "O(1)", "O(n²)"],
+answer: 2
+},
+
+{
+question: "What does a Python decorator modify?",
+options: [
+"Class name",
+"Function/class behavior",
+"Variable type",
+"Memory"
+],
+answer: 1
+},
+
+{
+question: "Which module is commonly used for regular expressions?",
+options: ["regex", "re", "regexp", "pattern"],
+answer: 1
+},
+
+{
+question: "What does the GIL affect in CPython?",
+options: [
+"File handling",
+"Execution of Python bytecode by threads",
+"Database access",
+"List creation"
+],
+answer: 1
+},
+
+{
+question: "Which statement is used to raise an exception?",
+options: ["throw", "raise", "error", "exception"],
+answer: 1
+},
+
+{
+question: "What does __slots__ primarily help control?",
+options: [
+"Loop execution",
+"Instance attribute storage",
+"Exception handling",
+"File access"
+],
+answer: 1
+},
+
+{
+question: "What is MRO?",
+options: [
+"Memory Runtime Object",
+"Method Resolution Order",
+"Module Runtime Operation",
+"Method Return Object"
+],
+answer: 1
+},
+
+{
+question: "Which function returns an iterator from an iterable?",
+options: ["iterator()", "iter()", "iterate()", "next()"],
+answer: 1
+},
+
+{
+question: "Which function retrieves the next item from an iterator?",
+options: ["next()", "iter()", "get()", "advance()"],
+answer: 0
+},
+
+{
+question: "What is monkey patching?",
+options: [
+"Changing code at runtime",
+"Debugging syntax",
+"Compiling Python",
+"Deleting modules"
+],
+answer: 0
+},
+
+{
+question: "Which module supports abstract base classes?",
+options: ["abstract", "abc", "interface", "base"],
+answer: 1
+},
+
+{
+question: "What is duck typing?",
+options: [
+"Checking exact class",
+"Behavior-based typing",
+"Static typing",
+"Compilation"
+],
+answer: 1
+},
+
+{
+question: "Which keyword creates a context manager block?",
+options: ["with", "context", "manage", "using"],
+answer: 0
+},
+
+{
+question: "What does functools.lru_cache provide?",
+options: [
+"Logging",
+"Memoization",
+"Threading",
+"File handling"
+],
+answer: 1
+},
+
+{
+question: "Which protocol allows an object to be used with len()?",
+options: ["__length__", "__len__", "__size__", "__count__"],
+answer: 1
+},
+
+{
+question: "Which method is called when an object is converted to string using str()?",
+options: ["__string__", "__str__", "__text__", "__convert__"],
+answer: 1
+},
+
+{
+question: "What does deepcopy() do?",
+options: [
+"Copies references only",
+"Creates an independent nested copy",
+"Deletes an object",
+"Converts an object"
+],
+answer: 1
+},
+
+{
+question: "Which module provides tools for functional programming?",
+options: ["functional", "functools", "functions", "func"],
+answer: 1
+},
+
+{
+question: "Which data structure is commonly used internally for Python sets?",
+options: ["Array", "Hash table", "Linked list", "Stack"],
+answer: 1
+}
+
+]
+
+};
+
+
+/* =====================================================
+   VARIABLES
+===================================================== */
+
+let currentPaper = [];
+let currentQuestion = 0;
+let studentName = "";
+let score = 0;
+
+let userAnswers = [];
+
+let answeredQuestions = [];
+
+
+/* =====================================================
+   PAGE CONTROL
+===================================================== */
+
+function showPage(pageId) {
+
+    document.querySelectorAll(".page").forEach(page => {
+        page.classList.remove("active-page");
+    });
+
+    document.getElementById(pageId).classList.add("active-page");
+
+    window.scrollTo(0, 0);
+}
+
+
+/* =====================================================
+   STUDENT LOGIN
+===================================================== */
+
+function startStudentExam() {
+
+    const name =
+        document.getElementById("studentName").value.trim();
+
+    if (name === "") {
+
+        alert("Please enter student name.");
+
+        return;
+    }
+
+    studentName = name;
+
+    const selectedPaper =
+        document.getElementById("paperSelect").value;
+
+    currentPaper = quizData[selectedPaper];
+
+    currentQuestion = 0;
+
+    score = 0;
+
+    userAnswers = new Array(currentPaper.length).fill(null);
+
+    answeredQuestions =
+        new Array(currentPaper.length).fill(false);
+
+    document.getElementById("studentDisplay").innerText =
+        "Student: " + studentName;
+
+    createQuestionNumbers();
+
+    showPage("quizPage");
+
+    displayQuestion();
+}
+
+
+/* =====================================================
+   CREATE QUESTION NUMBERS
+===================================================== */
+
+function createQuestionNumbers() {
+
+    const container =
+        document.getElementById("questionNumbers");
+
+    container.innerHTML = "";
+
+    currentPaper.forEach((question, index) => {
+
+        const button =
+            document.createElement("button");
+
+        button.className =
+            "btn btn-outline-primary question-number";
+
+        button.innerText = index + 1;
+
+        button.onclick = function () {
+
+            currentQuestion = index;
+
+            displayQuestion();
+        };
+
+        button.id = "questionNumber-" + index;
+
+        container.appendChild(button);
+
+    });
+}
+
+
+/* =====================================================
+   DISPLAY QUESTION
+===================================================== */
+
+function displayQuestion() {
+
+    const question =
+        currentPaper[currentQuestion];
+
+    document.getElementById("questionText").innerText =
+        (currentQuestion + 1) +
+        ". " +
+        question.question;
+
+    document.getElementById("questionCount").innerText =
+        "Question " +
+        (currentQuestion + 1) +
+        " / " +
+        currentPaper.length;
+
+
+    const container =
+        document.getElementById("optionsContainer");
+
+    container.innerHTML = "";
+
+    question.options.forEach((option, index) => {
+
+        const button =
+            document.createElement("button");
+
+        button.className =
+            "option-btn";
+
+        button.innerText =
+            String.fromCharCode(65 + index) +
+            ". " +
+            option;
+
+        button.onclick = function () {
+
+            selectAnswer(index);
+        };
+
+
+        if (userAnswers[currentQuestion] !== null) {
+
+            button.disabled = true;
+
+            if (index === question.answer) {
+
+                button.classList.add("correct");
+
+            }
+
+            if (
+                index === userAnswers[currentQuestion] &&
+                index !== question.answer
+            ) {
+
+                button.classList.add("wrong");
+
+            }
+
+        }
+
+        container.appendChild(button);
+
+    });
+
+
+    showFeedback();
+
+    updateQuestionNumbers();
+
+
+    if (currentQuestion === currentPaper.length - 1) {
+
+        document.getElementById("nextButton").innerText =
+            "Finish Exam ✓";
+
+    } else {
+
+        document.getElementById("nextButton").innerText =
+            "Next →";
+    }
+}
+
+
+/* =====================================================
+   SELECT ANSWER
+===================================================== */
+
+function selectAnswer(selectedIndex) {
+
+    if (userAnswers[currentQuestion] !== null) {
+
+        return;
+    }
+
+    const question =
+        currentPaper[currentQuestion];
+
+    userAnswers[currentQuestion] =
+        selectedIndex;
+
+    answeredQuestions[currentQuestion] =
+        true;
+
+    if (selectedIndex === question.answer) {
+
+        score++;
+
+    }
+
+    displayQuestion();
+}
+
+
+/* =====================================================
+   FEEDBACK
+===================================================== */
+
+function showFeedback() {
+
+    const feedback =
+        document.getElementById("answerFeedback");
+
+    if (userAnswers[currentQuestion] === null) {
+
+        feedback.innerHTML = "";
+
+        return;
+    }
+
+    const question =
+        currentPaper[currentQuestion];
+
+    const selected =
+        userAnswers[currentQuestion];
+
+
+    if (selected === question.answer) {
+
+        feedback.innerHTML =
+            '<div class="alert alert-success">' +
+            "✅ Correct Answer!" +
+            "</div>";
+
+    } else {
+
+        feedback.innerHTML =
+            '<div class="alert alert-danger">' +
+            "❌ Wrong Answer!<br>" +
+            "<strong>Correct Answer:</strong> " +
+            question.options[question.answer] +
+            "</div>";
+    }
+}
+
+
+/* =====================================================
+   QUESTION NUMBERS UPDATE
+===================================================== */
+
+function updateQuestionNumbers() {
+
+    currentPaper.forEach((question, index) => {
+
+        const button =
+            document.getElementById(
+                "questionNumber-" + index
+            );
+
+        button.classList.remove(
+            "answered",
+            "current"
+        );
+
+        if (answeredQuestions[index]) {
+
+            button.classList.add("answered");
+
+        }
+
+        if (index === currentQuestion) {
+
+            button.classList.add("current");
+
+        }
+
+    });
+}
+
+
+/* =====================================================
+   NEXT QUESTION
+===================================================== */
+
+function nextQuestion() {
+
+    if (
+        currentQuestion === currentPaper.length - 1
+    ) {
+
+        finishExam();
+
+        return;
+    }
+
+    currentQuestion++;
+
+    displayQuestion();
+}
+
+
+/* =====================================================
+   PREVIOUS QUESTION
+===================================================== */
+
+function previousQuestion() {
+
+    if (currentQuestion > 0) {
+
+        currentQuestion--;
+
+        displayQuestion();
+    }
+}
+
+
+/* =====================================================
+   FINISH EXAM
+===================================================== */
+
+function finishExam() {
+
+    showPage("resultPage");
+
+    document.getElementById("resultStudent").innerText =
+        "Student: " + studentName;
+
+    document.getElementById("finalScore").innerText =
+        score + " / " + currentPaper.length;
+
+    document.getElementById("scoreDetails").innerText =
+        "You answered " +
+        score +
+        " questions correctly out of " +
+        currentPaper.length +
+        ".";
+
+
+    let message = "";
+
+    if (score < 10) {
+
+        message =
+            "You will practice more, good luck for further exam! 😊";
+
+    } else if (score >= 19) {
+
+        message =
+            "Excellent! Keep it up! 🏆🌟";
+
+    } else {
+
+        message =
+            "NICE BUT TRY TO SCORE 20! 👍";
+    }
+
+    document.getElementById("scoreMessage").innerText =
+        message;
+}
+
+
+/* =====================================================
+   REVIEW EXAM
+===================================================== */
+
+function showReview() {
+
+    showPage("reviewPage");
+
+    const container =
+        document.getElementById("reviewContainer");
+
+    container.innerHTML = "";
+
+    currentPaper.forEach((question, index) => {
+
+        const selected =
+            userAnswers[index];
+
+        const item =
+            document.createElement("div");
+
+        item.className =
+            "review-item";
+
+
+        let selectedText =
+            selected === null
+            ? "Not Answered"
+            : question.options[selected];
+
+
+        let correctText =
+            question.options[question.answer];
+
+
+        if (selected === question.answer) {
+
+            item.style.borderLeft =
+                "5px solid #198754";
+
+            item.innerHTML =
+
+                "<h5>" +
+                (index + 1) +
+                ". " +
+                question.question +
+                "</h5>" +
+
+                '<p class="text-success">' +
+                "✅ Correct" +
+                "</p>" +
+
+                "<p><strong>Your Answer:</strong> " +
+                selectedText +
+                "</p>";
+
+        } else {
+
+            item.innerHTML =
+
+                "<h5>" +
+                (index + 1) +
+                ". " +
+                question.question +
+                "</h5>" +
+
+                '<p class="text-danger">' +
+                "❌ Wrong Answer" +
+                "</p>" +
+
+                "<p><strong>Your Answer:</strong> " +
+                selectedText +
+                "</p>" +
+
+                '<p class="text-success">' +
+                "<strong>Correct Answer:</strong> " +
+                correctText +
+                "</p>";
+        }
+
+        container.appendChild(item);
+
+    });
+}
+
+
+/* =====================================================
+   ADMIN
+===================================================== */
+
+function showAdmin() {
+
+    showPage("adminPage");
+}
+
+
+function addQuestion() {
+
+    const paper =
+        document.getElementById("adminPaper").value;
+
+    const question =
+        document.getElementById("newQuestion")
+        .value.trim();
+
+    const options = [
+
+        document.getElementById("option1").value.trim(),
+
+        document.getElementById("option2").value.trim(),
+
+        document.getElementById("option3").value.trim(),
+
+        document.getElementById("option4").value.trim()
+
+    ];
+
+    const answer =
+        parseInt(
+            document.getElementById("correctOption").value
+        );
+
+
+    if (
+        question === "" ||
+        options.some(option => option === "")
+    ) {
+
+        alert("Please fill all fields.");
+
+        return;
+    }
+
+
+    quizData[paper].push({
+
+        question: question,
+
+        options: options,
+
+        answer: answer
+
+    });
+
+
+    document.getElementById("adminMessage").innerHTML =
+
+        '<div class="alert alert-success">' +
+
+        "✅ Question added successfully!" +
+
+        "<br>" +
+
+        "Total questions in this paper: " +
+
+        quizData[paper].length +
+
+        "</div>";
+
+
+    document.getElementById("newQuestion").value = "";
+
+    document.getElementById("option1").value = "";
+
+    document.getElementById("option2").value = "";
+
+    document.getElementById("option3").value = "";
+
+    document.getElementById("option4").value = "";
+
+}
+
+
+/* =====================================================
+   HOME / LOGOUT
+===================================================== */
+
+function goHome() {
+
+    currentQuestion = 0;
+
+    score = 0;
+
+    userAnswers = [];
+
+    answeredQuestions = [];
+
+    showPage("loginPage");
+}
+
+</script>
+
+
+<!-- Bootstrap JS -->
+
+<script
+src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+</script>
+
+</body>
+</html>
+```
